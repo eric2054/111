@@ -13,6 +13,14 @@ int main(){
     s[3]=Salary("Duet", 266, 3, 6);
     s[4]=Salary("Kimora", 193, 5, 2);
     s[5]=Salary("Chaviva", 210, 5, 4);
+
+    for(int i=0; i<6; i++){
+        s[i].writeToFile();
+    }
+    for(int i=0; i<6; i++){
+        s[i].readFromFile();
+    }
+     
     for(int i=0; i<6; i++){
         cout<<s[i].getName()<<" "<<s[i].getSalary()<<endl;
     }
