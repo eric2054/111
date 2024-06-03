@@ -1,111 +1,123 @@
 #include <iostream>
-#include <vector>
 #include <iomanip>
-
+#include <vector>
 using namespace std;
 
-
-template<typename T>
-vector<vector<T>> transpose(const vector<vector<T>>& matrix) {
-    size_t rows = matrix.size();
-    size_t cols = matrix[0].size();
-    vector<vector<T>> transposed(cols, vector<T>(rows));
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < cols; ++j) {
+template <typename T>
+vector<vector<T>> transpose(const vector<vector<T>> &matrix)
+{
+    vector<vector<T>> transposed(matrix[0].size(), vector<T>(matrix.size()));
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[0].size(); ++j)
+        {
             transposed[j][i] = matrix[i][j];
         }
     }
     return transposed;
 }
 
-template<typename T>
-T sumAround(const vector<vector<T>>& matrix, int x, int y) {
-    T sum = T();
-    int rows = matrix.size();
-    int cols = matrix[0].size();
-    for (int i = x - 1; i <= x + 1; ++i) {
-        for (int j = y - 1; j <= y + 1; ++j) {
-            if (i >= 0 && i < rows && j >= 0 && j < cols && !(i == x && j == y)) {
+template <typename T>
+T sumAround(const vector<vector<T>> matrix, int x, int y)
+{
+    T sum = 0;
+    for (int i = x - 1; i <= x + 1; ++i)
+    {
+        for (int j = y - 1; j <= y + 1; ++j)
+        {
+            if (i >= 0 && i < matrix.size() && j >= 0 && j < matrix[0].size())
+            {
                 sum += matrix[i][j];
             }
         }
     }
+    sum -= matrix[x][y];
     return sum;
 }
 
-template<typename T>
-void printMatrix(const vector<vector<T>>& matrix) {
-    for (const auto& row : matrix) {
-        for (const auto& elem : row) {
-            if constexpr (is_floating_point<T>::value) {
-                cout << fixed << setprecision(1) << elem << " ";
-            }
-            else {
-                cout << elem << " ";
-            }
+template <typename T>
+void printMatrix(const vector<vector<T>> matrix)
+{
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[0].size(); ++j)
+        {
+            cout << fixed << setprecision(1) << matrix[i][j] << " ";
         }
         cout << endl;
     }
 }
 
-int main() {
+int main()
+{
     int rows, cols;
-    while (cin >> rows >> cols) {
-        vector<vector<int>> matrix1(rows, vector<int>(cols));
-        vector<vector<double>> matrix2(rows, vector<double>(cols));
-        vector<vector<char>> matrix3(rows, vector<char>(cols));
+    cin >> rows >> cols;
 
-        for (int i = 0; i < rows; ++i)
-            for (int j = 0; j < cols; ++j)
-                cin >> matrix1[i][j];
+    vector<vector<int>> matrixInt(rows, vector<int>(cols));
+    vector<vector<double>> matrixDouble(rows, vector<double>(cols));
+    vector<vector<char>> matrixChar(rows, vector<char>(cols));
 
-        for (int i = 0; i < rows; ++i)
-            for (int j = 0; j < cols; ++j)
-                cin >> matrix2[i][j];
-
-        for (int i = 0; i < rows; ++i)
-            for (int j = 0; j < cols; ++j)
-                cin >> matrix3[i][j];
-
-        vector<pair<int, int>> coords1(3);
-        for (int i = 0; i < 3; ++i) {
-            cin >> coords1[i].first >> coords1[i].second;
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            cin >> matrixInt[i][j];
         }
-
-        vector<pair<int, int>> coords2(3);
-        for (int i = 0; i < 3; ++i) {
-            cin >> coords2[i].first >> coords2[i].second;
-        }
-
-        cout << "===== [ Matrix 1 ] =====" << endl;
-        cout << "Original matrix:" << endl;
-        printMatrix(matrix1);
-        auto transposed1 = transpose(matrix1);
-        cout << "Transposed matrix:" << endl;
-        printMatrix(transposed1);
-        cout << "Sum of the surrounding element:" << endl;
-        for (const auto& coord : coords1) {
-            cout << "(" << coord.first << ", " << coord.second << ") -> " << sumAround(transposed1, coord.first, coord.second) << endl;
-        }
-        cout << endl;
-
-        cout << "===== [ Matrix 2 ] =====" << endl;
-        cout << "Original matrix:" << endl;
-        printMatrix(matrix2);
-        auto transposed2 = transpose(matrix2);
-        cout << "Transposed matrix:" << endl;
-        printMatrix(transposed2);
-        cout << "Sum of the surrounding element:" << endl;
-        for (const auto& coord : coords2) {
-            cout << "(" << coord.first << ", " << coord.second << ") -> " << fixed << setprecision(1) << sumAround(transposed2, coord.first, coord.second) << endl;
-        }
-        cout << endl;
-
-        cout << "===== [ Matrix 3 ] =====" << endl;
-        cout << "Original matrix:" << endl;
-        printMatrix(matrix3);
-        auto transposed3 = transpose(matrix3);
-        cout << "Transposed matrix:" << endl;
-        printMatrix(transposed3);
     }
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            cin >> matrixDouble[i][j];
+        }
+    }
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            cin >> matrixChar[i][j];
+        }
+    }
+
+    cout << "===== [ Matrix 1 ] =====" << endl;
+    cout << "Original matrix:" << endl;
+    printMatrix(matrixInt);
+
+    vector<vector<int>> transposedInt = transpose(matrixInt);
+    cout << "Transposed matrix:" << endl;
+    printMatrix(transposedInt);
+
+    cout << "Sum of the surrounding element:" << endl;
+    for (int i = 0; i < 3; i++)
+    {
+        int x, y;
+        cin >> x >> y;
+        cout << "(" << x << ", " << y << ") -> " << sumAround(transposedInt, x, y) << endl;
+    }
+
+    cout << "===== [ Matrix 2 ] =====" << endl;
+    cout << "Original matrix:" << endl;
+    printMatrix(matrixDouble);
+
+    vector<vector<double>> transposedDouble = transpose(matrixDouble);
+    cout << "Transposed matrix:" << endl;
+    printMatrix(transposedDouble);
+
+    cout << "Sum of the surrounding element:" << endl;
+    for (int i = 0; i < 3; i++)
+    {
+        int x, y;
+        cin >> x >> y;
+        cout << "(" << x << ", " << y << ") -> " << sumAround(transposedDouble, x, y) << endl;
+    }
+
+    cout << "===== [ Matrix 3 ] =====" << endl;
+    cout << "Original matrix:" << endl;
+    printMatrix(matrixChar);
+
+    vector<vector<char>> transposedChar = transpose(matrixChar);
+    cout << "Transposed matrix:" << endl;
+    printMatrix(transposedChar);
+
+    return 0;
 }
